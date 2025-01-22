@@ -1,81 +1,77 @@
-import { BASE_AUTH_URL } from "./URL.js";
-
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signupForm");
+  const passwordField = document.getElementById("password");
+  const confirmPasswordField = document.getElementById("confirmPassword");
+  const passwordErrors = document.getElementById("passwordErrors");
+  const generalErrorMessage = document.getElementById("generalErrorMessage");
 
-  const inputFields = document.querySelectorAll(".form-control");
+  signupForm.addEventListener("submit", (event) => {
+    event.preventDefault(); // Prevent default form submission
 
-  inputFields.forEach((field) => {
-    field.addEventListener("input", () => {
-      document.getElementById("error-message").style.display = "none";
-    });
-  });
+    const password = passwordField.value;
+    const confirmPassword = confirmPasswordField.value;
+    let isValid = true;
 
-  signupForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    // Clear any previous error or success messages
+    passwordErrors.innerHTML = "";
+    generalErrorMessage.style.display = "none";
 
-    const email = document.getElementById("email").value;
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
-
-    if (password !== confirmPassword) {
-      displayError("Passwords do not match.");
-      return;
+    // Remove any existing success message
+    const existingSuccessMessage = document.getElementById("successMessage");
+    if (existingSuccessMessage) {
+      existingSuccessMessage.remove();
     }
 
-    try {
-      const response = await signupUser(firstName, lastName, email, password);
+    // Password validation
+    if (password.length < 8) {
+      const error = document.createElement("p");
+      error.textContent = "Password must be at least 8 characters long.";
+      passwordErrors.appendChild(error);
+      isValid = false;
+    } else if (password.length > 25) {
+      const error = document.createElement("p");
+      error.textContent = "Password must not exceed 25 characters.";
+      passwordErrors.appendChild(error);
+      isValid = false;
+    } else if (
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password) ||
+      !/[!@#$%^&*(),.?":{}|<>]/.test(password)
+    ) {
+      const error = document.createElement("p");
+      error.textContent =
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.";
+      passwordErrors.appendChild(error);
+      isValid = false;
+    }
 
-      if (!response.error) {
-        window.location.href = `../client/login.html`;
-      } else {
-        displayError(response.message);
-      }
-    } catch (error) {
-      displayError("An error occurred during signup. Please try again.");
-      console.error(error);
+    // Confirm password validation
+    if (password !== confirmPassword) {
+      generalErrorMessage.textContent = "Passwords do not match.";
+      generalErrorMessage.style.display = "block";
+      isValid = false;
+    }
+
+    // Show success message if all validations pass
+    if (isValid) {
+      passwordErrors.innerHTML = ""; // Clear error messages
+
+      // Create and display success message
+      const successMessage = document.createElement("p");
+      successMessage.id = "successMessage";
+      successMessage.textContent = "Sign Up Successful!";
+      successMessage.style.color = "green";
+      successMessage.style.marginTop = "10px";
+
+      // Append the success message after the Sign Up button
+      const signUpButton = signupForm.querySelector(".singUpButton");
+      signUpButton.appendChild(successMessage);
+
+      // Optionally reset the form after success
+      setTimeout(() => {
+        signupForm.reset(); // Clear all form inputs
+      }, 2000);
     }
   });
 });
-
-async function signupUser(firstName, lastName, email, password) {
-  try {
-    const response = await fetch(`${BASE_AUTH_URL}/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        password,
-      }),
-    });
-
-    let data;
-    try {
-      data = await response.json();
-    } catch (err) {
-      return { error: true, message: "Invalid response from server." };
-    }
-
-    if (response.ok) {
-      return { error: false, ...data };
-    } else {
-      return { error: true, message: data.message || "Signup failed." };
-    }
-  } catch (error) {
-    console.error("Error during signup:", error);
-    return { error: true, message: error.message };
-  }
-}
-
-function displayError(message) {
-  const errorMessage = document.getElementById("error-message");
-  errorMessage.style.color = "red";
-  errorMessage.style.display = "block";
-  errorMessage.innerHTML = message;
-}
