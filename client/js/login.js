@@ -3,7 +3,6 @@ import { BASE_AUTH_URL } from "./URL.js";
 window.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("loginForm");
   const inputFields = document.querySelectorAll(".form-control");
-
   inputFields.forEach((field) => {
     field.addEventListener("input", () => {
       document.getElementById("error-message").style.display = "none";
@@ -42,6 +41,19 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     console.error("Login form not found");
   }
+
+  const passwordInput = document.getElementById('password');
+  const passwordToggle = document.querySelector('.password-toggle');
+
+  passwordToggle.addEventListener('click', () => {
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        passwordToggle.style.color = 'rgb(111, 0, 255)'; 
+    } else {
+        passwordInput.type = 'password';
+        passwordToggle.style.color = 'rgb(204, 204, 204)'; 
+    }
+  });
 });
 
 async function loginUser(email, password) {
