@@ -33,8 +33,20 @@ const getSingleFeedback = async (userId, movieId) => {
 
 
 const getAverageUserRatingForMovie = async (movieId) => {
-  //challenge 4.a starts here
-  //challenge 4.a ends here
+  try {
+    const result = await knex_db.raw(
+      `SELECT AVG(rating) AS averageRating FROM feedback WHERE movieId = ${movieId}`, 
+    );
+
+    if (result.rows.length > 0 && result.rows[0].averageRating) {
+      return result.rows[0].averageRating;
+    } else {
+      return 0; 
+    }
+  } catch (error) {
+    console.error("Error getting average rating:", error);
+    throw error; 
+  }
 };
 
 const updateFeedback = async (feedback) => {
