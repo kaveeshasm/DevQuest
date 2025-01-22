@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles/signup.css" />
     <link href="styles/global.css" rel="stylesheet" />
     <link href="styles/fonts.css" rel="stylesheet" />
-    <script src="js/signup.js" type="module"></script>
+    <script src="js/signup.js" type="module" defer></script>
   </head>
 
   <body class="dark-theme">
@@ -18,6 +18,7 @@
           <p class="form-intro">
             Please fill your details to create an account.
           </p>
+
           <div class="form-group mb-3">
             <label for="email" class="form-label">Email</label>
             <input type="email" class="form-control" id="email" required />
@@ -43,6 +44,10 @@
                 id="password"
                 required
               />
+              <div
+                id="passwordErrors"
+                style="color: red; margin-top: 10px"
+              ></div>
             </div>
             <div class="col">
               <label for="confirmPassword" class="form-label"
@@ -57,7 +62,7 @@
             </div>
           </div>
 
-          <p id="error-message" class="error-message" style="display: none"></p>
+          <p id="generalErrorMessage" style="color: red; display: none"></p>
 
           <div class="singUpButton">
             <button type="submit" class="btn-primary">Sign Up</button>
