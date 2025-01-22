@@ -31,7 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
           window.location.href = "../client/home.html";
         } else {
-          displayError(response.message);
+          displayError("Invalid email or password");
         }
       } catch (error) {
         displayError("An error occurred during login. Please try again.");
@@ -71,10 +71,7 @@ async function loginUser(email, password) {
     if (response.ok) {
       return data;
     } else {
-      return {
-        error: true,
-        message: data.message || "Invalid login credentials.",
-      };
+      return { error: true };
     }
   } catch (error) {
     return { error: true, message: error.message };
