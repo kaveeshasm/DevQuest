@@ -83,27 +83,19 @@ const addMovie = async (movie) => {
     return null;
   }
 };
-// //remove this for challenge 3.a
-// const getMovieByNameAndYear = async (title, year) => {
-// };
 
-const getMovieIdByName = async (title, year) => {
+const getMovieByNameAndYear = async (title, year) => {
   try {
     const result = await knex_db.raw(
-      "SELECT id FROM movie WHERE title=?",
-      [title]
+      "SELECT id FROM movie WHERE title = ? AND year = ?",
+      [title, year]
     );
-
-    if (result.length === 0) {
-      return false;
-    }
-    return true;
+    return result.length > 0;
   } catch (error) {
-    console.error(error);
-    return false;
+    console.error("Error in getMovieByNameAndYear:", error);
+    throw new Error("Database error");
   }
 };
-
 const getMovieById = async (id) => {
   //challenge 4.c starts here
  
