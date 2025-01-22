@@ -6,23 +6,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const generalErrorMessage = document.getElementById("generalErrorMessage");
 
   signupForm.addEventListener("submit", (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
 
     const password = passwordField.value;
     const confirmPassword = confirmPasswordField.value;
     let isValid = true;
 
-    // Clear any previous error or success messages
     passwordErrors.innerHTML = "";
     generalErrorMessage.style.display = "none";
 
-    // Remove any existing success message
     const existingSuccessMessage = document.getElementById("successMessage");
     if (existingSuccessMessage) {
       existingSuccessMessage.remove();
     }
 
-    // Password validation
     if (password.length < 8) {
       const error = document.createElement("p");
       error.textContent = "Password must be at least 8 characters long.";
@@ -46,31 +43,26 @@ document.addEventListener("DOMContentLoaded", () => {
       isValid = false;
     }
 
-    // Confirm password validation
     if (password !== confirmPassword) {
       generalErrorMessage.textContent = "Passwords do not match.";
       generalErrorMessage.style.display = "block";
       isValid = false;
     }
 
-    // Show success message if all validations pass
     if (isValid) {
-      passwordErrors.innerHTML = ""; // Clear error messages
+      passwordErrors.innerHTML = ""; 
 
-      // Create and display success message
       const successMessage = document.createElement("p");
       successMessage.id = "successMessage";
       successMessage.textContent = "Sign Up Successful!";
       successMessage.style.color = "green";
       successMessage.style.marginTop = "10px";
 
-      // Append the success message after the Sign Up button
       const signUpButton = signupForm.querySelector(".singUpButton");
       signUpButton.appendChild(successMessage);
 
-      // Optionally reset the form after success
       setTimeout(() => {
-        signupForm.reset(); // Clear all form inputs
+        signupForm.reset(); 
       }, 2000);
     }
   });
